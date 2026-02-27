@@ -3,20 +3,15 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:final_project/features/home/data/models/diagnosis_model.dart';
+import 'package:final_project/features/home/data/services/api_services.dart';
 import 'package:final_project/features/home/presentation/cubits/home_cubit/home_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeCubit extends Cubit<HomeState> {
-  HomeCubit() : super(HomeInitial());
-  final Dio dio = Dio(
-    BaseOptions(
-      baseUrl: 'https://sayed-ai-lab-mokhi.hf.space',
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
-    ),
-  );
+  HomeCubit(this.apiServices) : super(HomeInitial());
 
+  final ApiServices apiServices;
   Future<String> getUserName() async {
     final uid = FirebaseAuth.instance.currentUser!.uid;
     final doc = await FirebaseFirestore.instance
@@ -26,58 +21,56 @@ class HomeCubit extends Cubit<HomeState> {
     return doc['name'];
   }
 
-  Future<DiagnosisModel?> getPrediction(File imageFile) async {
-    try {
-      emit(DiagnosisLoading());
-      FormData formData = FormData.fromMap({
-        'file': await MultipartFile.fromFile(
-          imageFile.path,
-          filename: imageFile.path.split('/').last,
-        ),
-      });
+  Future<void> getPrediction(File imageFile) async {
+    emit(DiagnosisLoading());
+    final isValid = await _validateMri(imageFile);
+    if (!isValid) return;
 
-      final response = await dio.post(
-        '/predict',
-        data: formData,
-        options: Options(headers: {'Content-Type': 'multipart/form-data'}),
-      );
+    await _runPrediction(imageFile);
+  }
 
-      Map<String, dynamic> prediction = response.data;
-      DiagnosisModel diagnosisModel = DiagnosisModel.fromJson(
-        prediction,
-        imageFile,
-      );
-      // if (diagnosisModel.confidence < 0.5) {
-      //   emit(DiagnosisFailure(message: 'Select Another image'));
-      //   return null;
-      // }
-      emit(DiagnosisSuccess(diagnosisModel: diagnosisModel));
+  Future<bool> _validateMri(File imageFile) async {
+    final isMri = await apiServices.checkMri(
+      imageFile: imageFile,
+      endpoint: '/check-mri',
+    );
 
-      return diagnosisModel;
-    }on DioException catch (e) {
-
-    // ✅ Handle Timeout specifically
-    if (e.type == DioExceptionType.connectionTimeout ||
-        e.type == DioExceptionType.receiveTimeout ||
-        e.type == DioExceptionType.sendTimeout) {
-
-      emit(DiagnosisFailure(
-        message: 'Error timeout connecting to server',
-      ));
-    } else {
-      emit(DiagnosisFailure(
-        message: 'Error connecting to server',
-      ));
+    if (isMri == null) {
+      emit(DiagnosisFailure(message: 'Error connecting to server'));
+      return false;
     }
 
-    return null;
+    if (!isMri) {
+      emit(DiagnosisFailure(message: 'Image is not MRI'));
+      return false;
+    }
 
-  } 
-    catch (e) {
-      emit(DiagnosisFailure(message: e.toString()));
-      return null;
+    return true;
+  }
+
+  Future<void> _runPrediction(File imageFile) async {
+    try {
+      final response = await apiServices.predict(
+        endpoint: '/predict',
+        imageFile: imageFile,
+      );
+
+      final diagnosisModel = DiagnosisModel.fromJson(response.data, imageFile);
+
+      emit(DiagnosisSuccess(diagnosisModel: diagnosisModel));
+    } on DioException catch (e) {
+      emit(DiagnosisFailure(message: _handleDioError(e)));
     }
   }
 
-
+  String _handleDioError(DioException e) {
+    switch (e.type) {
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.receiveTimeout:
+      case DioExceptionType.sendTimeout:
+        return 'Timeout connecting to server';
+      default:
+        return 'Server error';
+    }
+  }
 }
