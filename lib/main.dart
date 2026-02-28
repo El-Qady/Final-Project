@@ -1,5 +1,6 @@
 import 'package:final_project/core/themes/provider/mode_provider.dart';
 import 'package:final_project/core/themes/themes.dart';
+import 'package:final_project/features/About/presentation/views/about_view.dart';
 import 'package:final_project/features/Auth/presentation/views/signin_view.dart';
 import 'package:final_project/features/Auth/presentation/views/signup_view.dart';
 import 'package:final_project/features/Splash/presentation/views/splash_view.dart';
@@ -60,6 +61,7 @@ class Mokhi extends StatelessWidget {
           '/doctorsView': (context) => const DoctorsView(),
           '/diagnosisView': (context) => const DiagnosisView(),
           '/historyView': (context) => const HistoryView(),
+          '/aboutView': (context) => const AboutView(),
         },
       ),
     );

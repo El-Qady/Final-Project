@@ -49,7 +49,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             dense: true,
             leading: Icon(
               Icons.dark_mode_outlined,
-              size: 22,
+
               color: theme.colorScheme.onSurface,
             ),
             title: Text(
@@ -63,11 +63,17 @@ class _CustomDrawerState extends State<CustomDrawer> {
               scale: 0.88,
               child: Switch(
                 value: pvalue,
-
                 // لما يكون شغال
                 activeThumbColor: theme.colorScheme.primary,
 
-                // لون الـ track في light
+                trackOutlineColor: WidgetStateProperty.resolveWith<Color?>((
+                  states,
+                ) {
+                  if (states.contains(WidgetState.selected)) {
+                    return theme.colorScheme.surface; // لون البوردر لما يكون On
+                  }
+                  return Colors.black26; // لون البوردر لما يكون Off
+                }),
                 inactiveTrackColor: theme.brightness == Brightness.dark
                     ? const Color(0xffc8e4fe)
                     : theme.colorScheme.surfaceContainerHighest,
@@ -79,6 +85,23 @@ class _CustomDrawerState extends State<CustomDrawer> {
             ),
           ),
 
+          // ================= About Us =================
+          ListTile(
+            leading: Icon(
+              Icons.info_outline,
+              color: theme.colorScheme.onSurface,
+            ),
+            title: Text(
+              'About Us',
+              style: TextStyle(
+                fontSize: 14,
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
+            onTap: () {
+              Navigator.popAndPushNamed(context, '/aboutView');
+            },
+          ),
           const Spacer(),
 
           // ================= Logout =================

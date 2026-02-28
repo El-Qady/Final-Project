@@ -24,7 +24,7 @@ class CustomBrainImage extends StatelessWidget {
       child: Opacity(
         opacity: 0.9,
         child: Image.asset(
-          'assets/images/9479213.png',
+          'assets/images/brain_splash.png',
           height: h * 0.5,
           width: w * 0.6,
         ),
