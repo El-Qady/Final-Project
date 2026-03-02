@@ -4,6 +4,7 @@ import 'package:final_project/features/About/presentation/views/about_view.dart'
 import 'package:final_project/features/Auth/presentation/views/signin_view.dart';
 import 'package:final_project/features/Auth/presentation/views/signup_view.dart';
 import 'package:final_project/features/Splash/presentation/views/splash_view.dart';
+import 'package:final_project/features/contact/presentation/views/contact_view.dart';
 import 'package:final_project/features/diagnosis/presentation/views/diagnosis_view.dart';
 import 'package:final_project/features/history/presentation/views/history_view.dart';
 import 'package:final_project/features/history/presentation/cubits/history_cubit/history_cubit.dart';
@@ -62,6 +63,7 @@ class Mokhi extends StatelessWidget {
           '/diagnosisView': (context) => const DiagnosisView(),
           '/historyView': (context) => const HistoryView(),
           '/aboutView': (context) => const AboutView(),
+          '/contactView': (context) => const ContactView(),
         },
       ),
     );

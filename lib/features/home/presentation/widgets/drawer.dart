@@ -43,6 +43,23 @@ class _CustomDrawerState extends State<CustomDrawer> {
               Navigator.pop(context);
             },
           ),
+          // ================= Contact Us ================
+          ListTile(
+            leading: Icon(
+              Icons.email_outlined,
+              color: theme.colorScheme.onSurface,
+            ),
+            title: Text(
+              'Contact Us',
+              style: TextStyle(
+                fontSize: 16,
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
+            onTap: () {
+              Navigator.popAndPushNamed(context, '/contactView');
+            },
+          ),
 
           // ================= Dark Mode =================
           ListTile(
