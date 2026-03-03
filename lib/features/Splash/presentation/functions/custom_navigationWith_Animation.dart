@@ -17,7 +17,7 @@ void goToSignIn(context) {
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(opacity: animation, child: child);
           },
-          transitionDuration: const Duration(milliseconds: 100), // مدة الـ fade
+          transitionDuration: const Duration(milliseconds: 300), 
         ),
   );
 }

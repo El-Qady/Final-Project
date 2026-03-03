@@ -18,6 +18,7 @@ class CustomTextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      onChanged: (value) => controller.text = value,
       maxLines: maxLines,
       validator: (value) =>
           value!.isEmpty ? "Required Field" : null,

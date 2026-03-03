@@ -22,7 +22,8 @@ class DiagnosisView extends StatelessWidget {
       backgroundColor: theme.scaffoldBackgroundColor,
 
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pop(context),
+        onPressed: () =>
+            Navigator.pushNamedAndRemoveUntil(context, '/home', (_) => false),
         backgroundColor: theme.colorScheme.surfaceContainerHighest,
         child: Icon(Icons.refresh, size: 30, color: theme.colorScheme.primary),
       ),

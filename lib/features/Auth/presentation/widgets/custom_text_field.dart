@@ -24,6 +24,7 @@ class CustomTextField extends StatelessWidget {
       obscureText: obscureText,
       validator: validator,
       onChanged: onChanged,
+      style: TextStyle(color: Colors.black),
       decoration: InputDecoration(
         border: textBorderStyle(),
         enabledBorder: textBorderStyle(),

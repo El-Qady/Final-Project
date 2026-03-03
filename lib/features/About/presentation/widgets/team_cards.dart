@@ -28,7 +28,7 @@ class TeamCards extends StatelessWidget {
         TeamCard(
           name: "Antonious Malak",
           position: "AI Engineer",
-          imagePath: "assets/images/avatar_girl.png",
+          imagePath: "assets/images/avatar_boy.png",
         ),
         TeamCard(
           name: "Mariam Ramadan",
