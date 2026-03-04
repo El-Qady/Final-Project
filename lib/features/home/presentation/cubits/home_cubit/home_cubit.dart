@@ -6,6 +6,7 @@ import 'package:final_project/features/home/data/models/diagnosis_model.dart';
 import 'package:final_project/features/home/data/services/api_services.dart';
 import 'package:final_project/features/home/presentation/cubits/home_cubit/home_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeCubit extends Cubit<HomeState> {
@@ -13,6 +14,9 @@ class HomeCubit extends Cubit<HomeState> {
 
   final ApiServices apiServices;
   Future<String>? _userNameFuture;
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController ageController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   Future<String> getUserName() {
     _userNameFuture ??= _fetchUserName();
@@ -28,12 +32,17 @@ class HomeCubit extends Cubit<HomeState> {
     return doc['name'];
   }
 
-  Future<void> getPrediction(File imageFile) async {
+  Future<void> getPrediction(
+    File imageFile,
+    String name,
+    int age,
+    String gender,
+  ) async {
     emit(DiagnosisLoading());
     final isValid = await _validateMri(imageFile);
     if (!isValid) return;
 
-    await _runPrediction(imageFile);
+    await _runPrediction(imageFile, name, age, gender);
   }
 
   Future<bool> _validateMri(File imageFile) async {
@@ -55,14 +64,25 @@ class HomeCubit extends Cubit<HomeState> {
     return true;
   }
 
-  Future<void> _runPrediction(File imageFile) async {
+  Future<void> _runPrediction(
+    File imageFile,
+    String name,
+    int age,
+    String gender,
+  ) async {
     try {
       final response = await apiServices.predict(
         endpoint: '/predict',
         imageFile: imageFile,
       );
 
-      final diagnosisModel = DiagnosisModel.fromJson(response.data, imageFile);
+      final diagnosisModel = DiagnosisModel.fromJson(
+        response.data,
+        imageFile,
+        name,
+        age,
+        gender,
+      );
 
       emit(DiagnosisSuccess(diagnosisModel: diagnosisModel));
     } on DioException catch (e) {
