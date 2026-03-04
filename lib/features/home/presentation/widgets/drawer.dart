@@ -43,6 +43,40 @@ class _CustomDrawerState extends State<CustomDrawer> {
               Navigator.pop(context);
             },
           ),
+          // ================= Find Doctor ================
+          ListTile(
+            leading: Icon(
+              Icons.person_search_outlined,
+              color: theme.colorScheme.onSurface,
+            ),
+            title: Text(
+              'Find Doctor',
+              style: TextStyle(
+                fontSize: 16,
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
+            onTap: () {
+              Navigator.popAndPushNamed(context, '/doctorsView');
+            },
+          ),
+          // ================= View History ================
+          ListTile(
+            leading: Icon(
+              Icons.history_outlined,
+              color: theme.colorScheme.onSurface,
+            ),
+            title: Text(
+              'View History',
+              style: TextStyle(
+                fontSize: 16,
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
+            onTap: () {
+              Navigator.popAndPushNamed(context, '/historyView');
+            },
+          ),
           // ================= Contact Us ================
           ListTile(
             leading: Icon(

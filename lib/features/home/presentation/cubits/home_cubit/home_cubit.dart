@@ -12,7 +12,14 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit(this.apiServices) : super(HomeInitial());
 
   final ApiServices apiServices;
-  Future<String> getUserName() async {
+  Future<String>? _userNameFuture;
+
+  Future<String> getUserName() {
+    _userNameFuture ??= _fetchUserName();
+    return _userNameFuture!;
+  }
+
+  Future<String> _fetchUserName() async {
     final uid = FirebaseAuth.instance.currentUser!.uid;
     final doc = await FirebaseFirestore.instance
         .collection('users')
