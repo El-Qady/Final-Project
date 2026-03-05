@@ -1,11 +1,13 @@
 import 'package:final_project/core/utils/app_strings.dart';
 import 'package:final_project/core/utils/app_text_styles.dart';
+import 'package:final_project/features/diagnosis/presentation/cubits/diagnosis_cubit/diagnosis_cubit.dart';
 import 'package:final_project/features/diagnosis/presentation/widgets/custom_buttons.dart';
 import 'package:final_project/features/diagnosis/presentation/widgets/custom_diagnosis_result.dart';
 import 'package:final_project/features/diagnosis/presentation/widgets/custom_image_display.dart';
 import 'package:final_project/features/diagnosis/presentation/widgets/important_notes.dart';
 import 'package:final_project/features/diagnosis/data/models/diagnosis_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DiagnosisView extends StatelessWidget {
   const DiagnosisView({super.key});
@@ -63,7 +65,11 @@ class DiagnosisView extends StatelessWidget {
           SizedBox(height: 24),
           CustomImportantNotes(),
           SizedBox(height: 24),
-          CustomButtons(onPress: (){}),
+          CustomButtons(
+            onPress: () {
+              context.read<DiagnosisCubit>().downloadPdf(result.name);
+            },
+          ),
         ],
       ),
     );
