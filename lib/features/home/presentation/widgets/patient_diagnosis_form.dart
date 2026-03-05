@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:final_project/core/functions/image_picker.dart';
-import 'package:final_project/features/home/presentation/cubits/home_cubit/home_cubit.dart';
+import 'package:final_project/features/diagnosis/presentation/cubits/diagnosis_cubit/diagnosis_cubit.dart';
 import 'package:final_project/features/home/presentation/widgets/patient_gender_selection.dart';
 import 'package:final_project/features/home/presentation/widgets/patient_image_selection.dart';
 import 'package:final_project/features/home/presentation/widgets/submit_button.dart';
@@ -32,8 +32,8 @@ class _PatientDiagnosisFormState extends State<PatientDiagnosisForm> {
     }
   }
 
-  void _submitData(HomeCubit homeCubit) {
-    if (homeCubit.formKey.currentState!.validate()) {
+  void _submitData(DiagnosisCubit diagnosisCubit) {
+    if (diagnosisCubit.formKey.currentState!.validate()) {
       if (_selectedImage == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -44,10 +44,10 @@ class _PatientDiagnosisFormState extends State<PatientDiagnosisForm> {
         return;
       }
 
-      homeCubit.getPrediction(
+      diagnosisCubit.getPrediction(
         _selectedImage!,
-        homeCubit.nameController.text,
-        int.parse(homeCubit.ageController.text),
+        diagnosisCubit.nameController.text,
+        int.parse(diagnosisCubit.ageController.text),
         _isMale ? "Male" : "Female",
       );
     }
@@ -55,7 +55,7 @@ class _PatientDiagnosisFormState extends State<PatientDiagnosisForm> {
 
   @override
   Widget build(BuildContext context) {
-    final homeCubit = context.read<HomeCubit>();
+    final diagnosisCubit = context.read<DiagnosisCubit>();
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
@@ -74,7 +74,7 @@ class _PatientDiagnosisFormState extends State<PatientDiagnosisForm> {
         ],
       ),
       child: Form(
-        key: homeCubit.formKey,
+        key: diagnosisCubit.formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -89,9 +89,9 @@ class _PatientDiagnosisFormState extends State<PatientDiagnosisForm> {
               ),
             ),
             const SizedBox(height: 20),
-            _PatientNameField(controller: homeCubit.nameController),
+            _PatientNameField(controller: diagnosisCubit.nameController),
             const SizedBox(height: 16),
-            _PatientAgeField(controller: homeCubit.ageController),
+            _PatientAgeField(controller: diagnosisCubit.ageController),
             const SizedBox(height: 20),
             PatientGenderSelection(
               isMale: _isMale,
@@ -105,7 +105,7 @@ class _PatientDiagnosisFormState extends State<PatientDiagnosisForm> {
               onPickImage: _pickImage,
             ),
             const SizedBox(height: 32),
-            SubmitButton(onPressed: () => _submitData(homeCubit)),
+            SubmitButton(onPressed: () => _submitData(diagnosisCubit)),
           ],
         ),
       ),

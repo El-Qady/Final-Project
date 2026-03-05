@@ -22,7 +22,7 @@ class ApiServices {
       ),
     );
   }
-  Future<FormData> bodyPostApi(File imageFile) async {
+  Future<FormData> bodyPostApiCkeckMri(File imageFile) async {
     FormData formData = FormData.fromMap({
       'file': await MultipartFile.fromFile(
         imageFile.path,
@@ -31,13 +31,31 @@ class ApiServices {
     });
     return formData;
   }
+  Future<FormData> bodyPostApiDiagnosis(
+  File imageFile, {
+  required String name,
+  required int age,
+  required String gender,
+}) async {
+  FormData formData = FormData.fromMap({
+    'name': name,
+    'age': age,
+    'gender': gender,
+    'file': await MultipartFile.fromFile(
+      imageFile.path,
+      filename: imageFile.path.split('/').last,
+    ),
+  });
+
+  return formData;
+}
 
   Future<bool?> checkMri({
     required File imageFile,
     required String endpoint,
   }) async {
     try {
-      FormData formData = await bodyPostApi(imageFile);
+      FormData formData = await bodyPostApiCkeckMri(imageFile);
 
       final response = await dioMri.post(endpoint, data: formData);
 
@@ -50,9 +68,14 @@ class ApiServices {
   Future<Response> predict({
     required String endpoint,
     required File imageFile,
+    required String name,
+    required int age,
+    required String gender,
   }) async {
-    FormData formData = await bodyPostApi(imageFile);
+    FormData formData = await bodyPostApiDiagnosis(imageFile, name: name, age: age, gender: gender);
 
     return await dioModel.post(endpoint, data: formData);
   }
+
+  
 }

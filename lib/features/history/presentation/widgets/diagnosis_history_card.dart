@@ -168,7 +168,7 @@ class DiagnosisHistoryCard extends StatelessWidget {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              '${(confidence * 100).toStringAsFixed(0)}%',
+                              '${(confidence)}%',
                               style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
@@ -190,10 +190,10 @@ class DiagnosisHistoryCard extends StatelessWidget {
   }
 
   Color getConfidenceColor(double value, ThemeData theme) {
-    if (value >= 0.8) {
+    if (value >= 80) {
       return Colors.green;
     }
-    if (value >= 0.5) {
+    if (value >= 50) {
       return Colors.orange;
     }
     return theme.colorScheme.error;

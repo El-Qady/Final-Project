@@ -29,7 +29,7 @@ class DiagnosisModel {
     return DiagnosisModel(
       imagename: image.path.split('/').last,
       image: image,
-      diagnosis: json['class_name'],
+      diagnosis: json['diagnosis'],
       confidence: (json['confidence']),
       age: age,
       gender: gender,

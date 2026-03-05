@@ -4,7 +4,7 @@ import 'package:final_project/features/diagnosis/presentation/widgets/custom_but
 import 'package:final_project/features/diagnosis/presentation/widgets/custom_diagnosis_result.dart';
 import 'package:final_project/features/diagnosis/presentation/widgets/custom_image_display.dart';
 import 'package:final_project/features/diagnosis/presentation/widgets/important_notes.dart';
-import 'package:final_project/features/home/data/models/diagnosis_model.dart';
+import 'package:final_project/features/diagnosis/data/models/diagnosis_model.dart';
 import 'package:flutter/material.dart';
 
 class DiagnosisView extends StatelessWidget {
@@ -63,7 +63,7 @@ class DiagnosisView extends StatelessWidget {
           SizedBox(height: 24),
           CustomImportantNotes(),
           SizedBox(height: 24),
-          CustomButtons(),
+          CustomButtons(onPress: (){}),
         ],
       ),
     );

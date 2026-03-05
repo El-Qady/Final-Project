@@ -2,9 +2,9 @@ import 'package:final_project/core/functions/show_toast.dart';
 import 'package:final_project/core/utils/app_strings.dart';
 import 'package:final_project/core/utils/app_text_styles.dart';
 import 'package:final_project/core/widgets/no_intenet_view.dart';
+import 'package:final_project/features/diagnosis/presentation/cubits/diagnosis_cubit/diagnosis_cubit.dart';
+import 'package:final_project/features/diagnosis/presentation/cubits/diagnosis_cubit/diagnosis_state.dart';
 import 'package:final_project/features/history/presentation/cubits/history_cubit/history_cubit.dart';
-import 'package:final_project/features/home/presentation/cubits/home_cubit/home_cubit.dart';
-import 'package:final_project/features/home/presentation/cubits/home_cubit/home_state.dart';
 import 'package:final_project/features/home/presentation/widgets/custom_home_body.dart';
 import 'package:final_project/features/home/presentation/widgets/drawer.dart';
 import 'package:final_project/features/home/presentation/widgets/sub_logo_home.dart';
@@ -51,7 +51,7 @@ class HomeView extends StatelessWidget {
           centerTitle: true,
           actions: const [SubLogoHome()],
         ),
-        body: BlocConsumer<HomeCubit, HomeState>(
+        body: BlocConsumer<DiagnosisCubit, DiagnosisState>(
           listener: (context, state) {
             if (state is DiagnosisFailure) {
               showToast(

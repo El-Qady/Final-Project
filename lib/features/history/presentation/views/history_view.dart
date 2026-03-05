@@ -3,7 +3,7 @@ import 'package:final_project/features/history/presentation/widgets/custom_loadi
 import 'package:final_project/features/history/presentation/widgets/diagnosis_history_card.dart';
 import 'package:final_project/features/history/presentation/cubits/history_cubit/history_cubit.dart';
 import 'package:final_project/features/history/presentation/cubits/history_cubit/history_state.dart';
-import 'package:final_project/features/home/data/models/diagnosis_model.dart';
+import 'package:final_project/features/diagnosis/data/models/diagnosis_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -1,7 +1,7 @@
 import 'package:final_project/core/utils/app_colors.dart';
 import 'package:final_project/core/utils/app_strings.dart';
 import 'package:final_project/core/utils/app_text_styles.dart';
-import 'package:final_project/features/home/data/models/diagnosis_model.dart';
+import 'package:final_project/features/diagnosis/data/models/diagnosis_model.dart';
 import 'package:flutter/material.dart';
 
 class CustomDiagnosisResult extends StatelessWidget {
@@ -94,7 +94,7 @@ class CustomDiagnosisResult extends StatelessWidget {
                         borderRadius: BorderRadius.circular(18),
                       ),
                       child: Text(
-                        '${(result.confidence * 100).toStringAsFixed(2)} %',
+                        '${(result.confidence)} %',
                         style: AppTextStyles.interMediumstyle16.copyWith(
                           color: Colors.white,
                           fontSize: 12,
