@@ -16,12 +16,16 @@ class DiagnosisCubit extends Cubit<DiagnosisState> {
     File imageFile,
     String name,
     int age,
-    String gender,
-    {bool isFromHistory=false,}
-  ) async {
-    emit(DiagnosisLoading());
+    String gender, {
+    bool isFromHistory = false,
+  }) async {
+    if (isFromHistory == false) {
+      emit(DiagnosisLoading());
+    } else if (isFromHistory == true) {
+      emit(DiangonosisHistoryLoading());
+    }
 
-    await _runPrediction(imageFile, name, age, gender,isFromHistory);
+    await _runPrediction(imageFile, name, age, gender, isFromHistory);
   }
 
   Future<void> _runPrediction(
@@ -39,26 +43,36 @@ class DiagnosisCubit extends Cubit<DiagnosisState> {
         age: age,
         gender: gender,
       );
-      if (isFromHistory==false) {
+      if (isFromHistory == false) {
         if (response.data == null) {
-        emit(DiagnosisFailure(message: 'Error connecting to server'));
-        return;
-      } else if (response.data['is_mri'] == false) {
-        emit(DiagnosisFailure(message: 'Image is not MRI'));
-        return;
-      }
-      final diagnosisModel = DiagnosisModel.fromJson(
-        response.data,
-        imageFile,
-        name,
-        age,
-        gender,
-      );
+          emit(DiagnosisFailure(message: 'Error connecting to server'));
+          return;
+        } else if (response.data['is_mri'] == false) {
+          emit(DiagnosisFailure(message: 'Image is not MRI'));
+          return;
+        }
+        final diagnosisModel = DiagnosisModel.fromJson(
+          response.data,
+          imageFile,
+          name,
+          age,
+          gender,
+        );
 
-      emit(DiagnosisSuccess(diagnosisModel: diagnosisModel));
+        emit(DiagnosisSuccess(diagnosisModel: diagnosisModel));
+      } else if (isFromHistory == true) {
+        if (response.data == null) {
+          emit(DiagonosisHistoryFailure('Error connecting to server'));
+          return;
+        }
+        emit(DiangonosisHistorySuccess());
       }
     } on DioException catch (e) {
-      emit(DiagnosisFailure(message: _handleDioError(e)));
+      if (isFromHistory == false) {
+        emit(DiagnosisFailure(message: _handleDioError(e)));
+      } else if (isFromHistory == true) {
+        emit(DiagonosisHistoryFailure(_handleDioError(e)));
+      }
     }
   }
 

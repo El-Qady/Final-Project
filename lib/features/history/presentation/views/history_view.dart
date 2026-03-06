@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:final_project/core/utils/app_text_styles.dart';
 import 'package:final_project/features/diagnosis/presentation/cubits/diagnosis_cubit/diagnosis_cubit.dart';
+import 'package:final_project/features/diagnosis/presentation/cubits/diagnosis_cubit/diagnosis_state.dart';
 import 'package:final_project/features/history/presentation/widgets/custom_loading_skeletonizer.dart';
 import 'package:final_project/features/history/presentation/widgets/diagnosis_history_card.dart';
 import 'package:final_project/features/history/presentation/cubits/history_cubit/history_cubit.dart';
@@ -20,6 +21,7 @@ class HistoryView extends StatefulWidget {
 }
 
 class _HistoryViewState extends State<HistoryView> {
+  Map<String, dynamic>? item;
   @override
   void initState() {
     super.initState();
@@ -65,67 +67,80 @@ class _HistoryViewState extends State<HistoryView> {
           ),
         ),
       ),
-      body: BlocBuilder<HistoryCubit, HistoryState>(
+      body: BlocConsumer<DiagnosisCubit, DiagnosisState>(
+        listener: (context, state) {
+          if (state is DiangonosisHistorySuccess) {
+            Navigator.pushNamed(
+              context,
+              '/diagnosisView',
+              arguments: {'diagnosis': DiagnosisModel.fromMap(item!)},
+            );
+          }
+        },
         builder: (context, state) {
-          return state is HistorySuccess
-              ? ListView.separated(
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.all(16),
-                  itemCount: state.history.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: Dismissible(
-                        key: UniqueKey(),
-                        direction: DismissDirection.startToEnd,
-                        background: Container(
-                          padding: const EdgeInsets.only(left: 16),
-                          alignment: Alignment.centerLeft,
-                          color: theme.colorScheme.error,
-                          child: Icon(
-                            Icons.delete_outline,
-                            color: theme.colorScheme.onError,
-                            size: 28,
-                          ),
-                        ),
-                        onDismissed: (direction) {
-                          context.read<HistoryCubit>().removeFromHistory(
-                            state.history[index]['date'],
-                          );
-                        },
-                        child: DiagnosisHistoryCard(
-                          ontap: () async {
-                            final item = state.history[index];
-                            final imageFile = await _downloadImageAsFile(
-                              item['image'] as String,
-                            );
-                            if (imageFile != null && context.mounted) {
-                              await context
-                                  .read<DiagnosisCubit>()
-                                  .getPrediction(
-                                    imageFile,
-                                    item['name'],
-                                    item['age'],
-                                    item['gender'],
-                                    isFromHistory: true,
-                                  );
-                            }
-                            Navigator.pushNamed(
-                              context,
-                              '/diagnosisView',
-                              arguments: {
-                                'diagnosis': DiagnosisModel.fromMap(item),
-                              },
-                            );
-                          },
-                          model: state.history[index],
-                        ),
-                      ),
-                    );
+          return state is DiangonosisHistoryLoading
+              ? Center(child: CircularProgressIndicator())
+              : BlocBuilder<HistoryCubit, HistoryState>(
+                  builder: (context, state) {
+                    return state is HistorySuccess
+                        ? ListView.separated(
+                            physics: const BouncingScrollPhysics(),
+                            padding: const EdgeInsets.all(16),
+                            itemCount: state.history.length,
+                            separatorBuilder: (_, __) =>
+                                const SizedBox(height: 12),
+                            itemBuilder: (context, index) {
+                              return ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: Dismissible(
+                                  key: UniqueKey(),
+                                  direction: DismissDirection.startToEnd,
+                                  background: Container(
+                                    padding: const EdgeInsets.only(left: 16),
+                                    alignment: Alignment.centerLeft,
+                                    color: theme.colorScheme.error,
+                                    child: Icon(
+                                      Icons.delete_outline,
+                                      color: theme.colorScheme.onError,
+                                      size: 28,
+                                    ),
+                                  ),
+                                  onDismissed: (direction) {
+                                    context
+                                        .read<HistoryCubit>()
+                                        .removeFromHistory(
+                                          state.history[index]['date'],
+                                        );
+                                  },
+                                  child: DiagnosisHistoryCard(
+                                    ontap: () async {
+                                      item = state.history[index];
+                                      final imageFile =
+                                          await _downloadImageAsFile(
+                                            item!['image'] as String,
+                                          );
+                                      if (imageFile != null &&
+                                          context.mounted) {
+                                        await context
+                                            .read<DiagnosisCubit>()
+                                            .getPrediction(
+                                              imageFile,
+                                              item!['name'],
+                                              item!['age'],
+                                              item!['gender'],
+                                              isFromHistory: true,
+                                            );
+                                      }
+                                    },
+                                    model: state.history[index],
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        : CustomLoadingSkeletonizer();
                   },
-                )
-              : CustomLoadingSkeletonizer();
+                );
         },
       ),
     );

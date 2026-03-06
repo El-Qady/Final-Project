@@ -105,25 +105,4 @@ class HistoryCubit extends Cubit<HistoryState> {
     return imageUrl;
   }
 
-  Future<void> getPredictionHistory(
-    File imageFile,
-    String name,
-    int age,
-    String gender,
-  ) async {
-    emit(HistoryDiagnosisLoading());
-    try {
-      await apiServices.predict(
-        endpoint: '/analyze',
-        imageFile: imageFile,
-        name: name,
-        age: age,
-        gender: gender,
-      );
-
-      emit(HistoryDiagnosisSuccess());
-    } catch (e) {
-      emit(HistoryDiagnosisFailure(message: e.toString()));
-    }
-  }
 }
