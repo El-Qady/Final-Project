@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:final_project/core/utils/app_text_styles.dart';
+import 'package:final_project/features/diagnosis/presentation/cubits/diagnosis_cubit/diagnosis_cubit.dart';
 import 'package:final_project/features/history/presentation/widgets/custom_loading_skeletonizer.dart';
 import 'package:final_project/features/history/presentation/widgets/diagnosis_history_card.dart';
 import 'package:final_project/features/history/presentation/cubits/history_cubit/history_cubit.dart';
@@ -6,6 +10,7 @@ import 'package:final_project/features/history/presentation/cubits/history_cubit
 import 'package:final_project/features/diagnosis/data/models/diagnosis_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 
 class HistoryView extends StatefulWidget {
   const HistoryView({super.key});
@@ -21,6 +26,25 @@ class _HistoryViewState extends State<HistoryView> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<HistoryCubit>().getHistory();
     });
+  }
+
+  /// Downloads an image from [url] to a temporary file and returns the [File].
+  /// Returns null if the download fails.
+  Future<File?> _downloadImageAsFile(String url) async {
+    try {
+      final tmpDir = await getTemporaryDirectory();
+      final fileName = url.split('/').last;
+      final filePath = '${tmpDir.path}/$fileName';
+      final file = File(filePath);
+
+      // Reuse cached file if it already exists
+      if (await file.exists()) return file;
+
+      await Dio().download(url, filePath);
+      return file;
+    } catch (_) {
+      return null;
+    }
   }
 
   @override
@@ -71,14 +95,27 @@ class _HistoryViewState extends State<HistoryView> {
                           );
                         },
                         child: DiagnosisHistoryCard(
-                          ontap: () {
+                          ontap: () async {
+                            final item = state.history[index];
+                            final imageFile = await _downloadImageAsFile(
+                              item['image'] as String,
+                            );
+                            if (imageFile != null && context.mounted) {
+                              await context
+                                  .read<DiagnosisCubit>()
+                                  .getPrediction(
+                                    imageFile,
+                                    item['name'],
+                                    item['age'],
+                                    item['gender'],
+                                    isFromHistory: true,
+                                  );
+                            }
                             Navigator.pushNamed(
                               context,
                               '/diagnosisView',
                               arguments: {
-                                'diagnosis': DiagnosisModel.fromMap(
-                                  state.history[index],
-                                ),
+                                'diagnosis': DiagnosisModel.fromMap(item),
                               },
                             );
                           },

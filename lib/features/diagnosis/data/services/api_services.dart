@@ -68,9 +68,7 @@ class ApiServices {
         dir = await getDownloadsDirectory();
       }
 
-      if (dir == null) {
-        dir = await getApplicationDocumentsDirectory();
-      }
+      dir ??= await getApplicationDocumentsDirectory();
 
       final fileName = "${patientName.replaceAll(' ', '_')}_Report.pdf";
       final file = File("${dir.path}/$fileName");

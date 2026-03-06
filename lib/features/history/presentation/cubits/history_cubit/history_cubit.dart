@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:final_project/features/diagnosis/data/models/diagnosis_model.dart';
+import 'package:final_project/features/diagnosis/data/services/api_services.dart';
 import 'package:final_project/features/history/presentation/cubits/history_cubit/history_state.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class HistoryCubit extends Cubit<HistoryState> {
   HistoryCubit() : super(HistoryInitial());
   final supabase = Supabase.instance.client;
+  ApiServices apiServices = ApiServices();
 
   void addToHistory(DiagnosisModel diagnosisModel) async {
     final uid = FirebaseAuth.instance.currentUser!.uid;
@@ -101,5 +103,27 @@ class HistoryCubit extends Cubit<HistoryState> {
         .getPublicUrl(fileName);
 
     return imageUrl;
+  }
+
+  Future<void> getPredictionHistory(
+    File imageFile,
+    String name,
+    int age,
+    String gender,
+  ) async {
+    emit(HistoryDiagnosisLoading());
+    try {
+      await apiServices.predict(
+        endpoint: '/analyze',
+        imageFile: imageFile,
+        name: name,
+        age: age,
+        gender: gender,
+      );
+
+      emit(HistoryDiagnosisSuccess());
+    } catch (e) {
+      emit(HistoryDiagnosisFailure(message: e.toString()));
+    }
   }
 }

@@ -17,10 +17,11 @@ class DiagnosisCubit extends Cubit<DiagnosisState> {
     String name,
     int age,
     String gender,
+    {bool isFromHistory=false,}
   ) async {
     emit(DiagnosisLoading());
 
-    await _runPrediction(imageFile, name, age, gender);
+    await _runPrediction(imageFile, name, age, gender,isFromHistory);
   }
 
   Future<void> _runPrediction(
@@ -28,6 +29,7 @@ class DiagnosisCubit extends Cubit<DiagnosisState> {
     String name,
     int age,
     String gender,
+    bool isFromHistory,
   ) async {
     try {
       final response = await apiServices.predict(
@@ -37,7 +39,8 @@ class DiagnosisCubit extends Cubit<DiagnosisState> {
         age: age,
         gender: gender,
       );
-      if (response.data == null) {
+      if (isFromHistory==false) {
+        if (response.data == null) {
         emit(DiagnosisFailure(message: 'Error connecting to server'));
         return;
       } else if (response.data['is_mri'] == false) {
@@ -53,6 +56,7 @@ class DiagnosisCubit extends Cubit<DiagnosisState> {
       );
 
       emit(DiagnosisSuccess(diagnosisModel: diagnosisModel));
+      }
     } on DioException catch (e) {
       emit(DiagnosisFailure(message: _handleDioError(e)));
     }
