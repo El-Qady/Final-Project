@@ -8,6 +8,7 @@ import 'package:final_project/features/contact/presentation/cubits/contact_cubit
 import 'package:final_project/features/contact/presentation/views/contact_view.dart';
 import 'package:final_project/features/diagnosis/presentation/cubits/diagnosis_cubit/diagnosis_cubit.dart';
 import 'package:final_project/features/diagnosis/presentation/views/diagnosis_view.dart';
+import 'package:final_project/features/history/presentation/cubits/history_diagnosis/history_diagnosis_cubit.dart';
 import 'package:final_project/features/history/presentation/views/history_view.dart';
 import 'package:final_project/features/history/presentation/cubits/history_cubit/history_cubit.dart';
 import 'package:final_project/features/diagnosis/data/services/api_services.dart';
@@ -47,6 +48,7 @@ class Mokhi extends StatelessWidget {
         BlocProvider(create: (context) => HistoryCubit()),
         BlocProvider(create: (context) => ContactCubit()),
         BlocProvider(create: (context) => DiagnosisCubit(ApiServices())),
+        BlocProvider(create: (context) => HistoryDiagnosisCubit()),
       ],
       child: MaterialApp(
         title: 'Mokhi',

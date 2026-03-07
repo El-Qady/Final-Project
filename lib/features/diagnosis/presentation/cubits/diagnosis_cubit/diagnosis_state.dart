@@ -18,15 +18,6 @@ final class DiagnosisSuccess extends DiagnosisState {
   DiagnosisSuccess({required this.diagnosisModel});
 }
 
-final class DiangonosisHistoryLoading extends DiagnosisState {}
-
-final class DiangonosisHistorySuccess extends DiagnosisState {}
-
-final class DiagonosisHistoryFailure extends DiagnosisState {
-  final String message;
-  DiagonosisHistoryFailure(this.message);
-}
-
 final class DiagnosisDownloadLoading extends DiagnosisState {}
 
 final class DiagnosisDownloadProgress extends DiagnosisState {

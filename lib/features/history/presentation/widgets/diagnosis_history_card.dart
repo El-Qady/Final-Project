@@ -158,7 +158,7 @@ class DiagnosisHistoryCard extends StatelessWidget {
                           children: [
                             Expanded(
                               child: LinearProgressIndicator(
-                                value: confidence,
+                                value: confidence / 100,
                                 minHeight: 6,
                                 backgroundColor:
                                     theme.colorScheme.surfaceContainerHighest,

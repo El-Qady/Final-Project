@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:final_project/core/utils/app_text_styles.dart';
-import 'package:final_project/features/diagnosis/presentation/cubits/diagnosis_cubit/diagnosis_cubit.dart';
-import 'package:final_project/features/diagnosis/presentation/cubits/diagnosis_cubit/diagnosis_state.dart';
+import 'package:final_project/features/history/presentation/cubits/history_diagnosis/history_diagnosis_cubit.dart';
+import 'package:final_project/features/history/presentation/cubits/history_diagnosis/history_diagnosis_state.dart';
 import 'package:final_project/features/history/presentation/widgets/custom_loading_skeletonizer.dart';
 import 'package:final_project/features/history/presentation/widgets/diagnosis_history_card.dart';
 import 'package:final_project/features/history/presentation/cubits/history_cubit/history_cubit.dart';
@@ -67,7 +67,7 @@ class _HistoryViewState extends State<HistoryView> {
           ),
         ),
       ),
-      body: BlocConsumer<DiagnosisCubit, DiagnosisState>(
+      body: BlocConsumer<HistoryDiagnosisCubit, HistoryDiagnosisState>(
         listener: (context, state) {
           if (state is DiangonosisHistorySuccess) {
             Navigator.pushNamed(
@@ -122,13 +122,12 @@ class _HistoryViewState extends State<HistoryView> {
                                       if (imageFile != null &&
                                           context.mounted) {
                                         await context
-                                            .read<DiagnosisCubit>()
+                                            .read<HistoryDiagnosisCubit>()
                                             .getPrediction(
                                               imageFile,
                                               item!['name'],
                                               item!['age'],
                                               item!['gender'],
-                                              isFromHistory: true,
                                             );
                                       }
                                     },
