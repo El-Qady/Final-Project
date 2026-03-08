@@ -3,7 +3,7 @@ class DoctorsModel {
   String? address;
   String? phone;
   DoctorsModel({this.name, this.address, this.phone});
- static  List doctors = [
+  static  List doctors = [
     DoctorsModel(
       name: "د. أحمد محمد",
       address: "القاهرة - مدينة نصر",

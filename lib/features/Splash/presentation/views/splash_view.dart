@@ -1,4 +1,4 @@
-import 'package:final_project/features/Splash/presentation/functions/custom_navigationwith_animation.dart';
+import 'package:final_project/features/Splash/presentation/functions/custom_navigation_with_animation.dart';
 import 'package:final_project/features/Splash/presentation/widgets/custom_splash_body.dart';
 import 'package:flutter/material.dart';
 

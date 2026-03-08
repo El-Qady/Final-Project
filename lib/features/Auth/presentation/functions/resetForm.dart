@@ -1,4 +1,4 @@
- import 'package:final_project/features/Auth/presentation/cubit/auth_cubit.dart';
+import 'package:final_project/features/Auth/presentation/cubit/auth_cubit.dart';
 
 void resetForm(AuthCubit cubit) {
     cubit.formKeySignUp.currentState!.reset();
