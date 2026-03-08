@@ -1,4 +1,4 @@
-import 'package:final_project/features/home/data/models/Doctors_model.dart';
+import 'package:final_project/features/home/data/models/doctors_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 

@@ -1,5 +1,5 @@
 import 'package:final_project/core/utils/app_text_styles.dart';
-import 'package:final_project/features/home/data/models/Doctors_model.dart';
+import 'package:final_project/features/home/data/models/doctors_model.dart';
 import 'package:final_project/features/home/presentation/widgets/custom_doctor_card.dart';
 import 'package:flutter/material.dart';
 

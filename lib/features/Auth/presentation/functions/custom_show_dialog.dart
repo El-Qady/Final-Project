@@ -1,5 +1,5 @@
 import 'package:final_project/features/Auth/presentation/cubit/auth_cubit.dart';
-import 'package:final_project/features/Auth/presentation/functions/resetform.dart';
+import 'package:final_project/features/Auth/presentation/functions/resetForm.dart';
 import 'package:flutter/material.dart';
 
 Future<dynamic> customShowDialog(BuildContext context, AuthCubit cubit) {
