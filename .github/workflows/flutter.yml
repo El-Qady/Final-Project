@@ -4,46 +4,64 @@ on:
   push:
     branches:
       - main
-
-  pull_request:
-    branches:
-      - main
+    tags:
+      - 'v*'   # أي tag يبدأ بـ v يعمل release
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout My Code 
+      # 1️⃣ تحميل الكود
+      - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Setup Java 17
+      # 2️⃣ Java
+      - name: Setup Java
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin' # Use the Eclipse Temurin distribution
+          distribution: 'temurin'
           java-version: '17'
 
-      - name: Install Flutter Version 3.35.3
+      # 3️⃣ Flutter
+      - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.35.3' # Use the required Flutter version
+          flutter-version: '3.35.3'
 
+      # 4️⃣ تثبيت Shorebird
+      - name: Install Shorebird
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/shorebirdtech/install/main/install.sh | bash
+
+      # 5️⃣ إضافة Shorebird للـ PATH
+      - name: Add Shorebird to PATH
+        run: echo "$HOME/.shorebird/bin" >> $GITHUB_PATH
+
+      # 6️⃣ تسجيل الدخول
+      - name: Shorebird Login
+        run: shorebird login --api-key ${{ secrets.SHOREBIRD_TOKEN }}
+
+      # 7️⃣ dependencies
       - name: Install Dependencies
         run: flutter pub get
 
-      # - name: Run Our Test
-      #   run: flutter test
+      # 🟢 Release (لما تعمل tag)
+      - name: Shorebird Release
+        if: startsWith(github.ref, 'refs/tags/')
+        run: shorebird release android --artifact apk
 
-      - name: Build APK
-        run: flutter build apk --release
-      - run: ls build/app/outputs/flutter-apk
+      # 🔵 Patch (أي push عادي)
+      - name: Shorebird Patch
+        if: github.ref == 'refs/heads/main'
+        run: shorebird patch android
 
-
-      - name: Upload artifact to Firebase App Distribution
+      # 📤 رفع على Firebase (بس في release)
+      - name: Upload to Firebase App Distribution
+        if: startsWith(github.ref, 'refs/tags/')
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
-          appId: ${{secrets.APP_ID}} 
-          serviceCredentialsFileContent: ${{secrets.GOOGLE_APPLICATION_CREDENTIALS}}
+          appId: ${{ secrets.APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
           groups: seniors
           file: build/app/outputs/flutter-apk/app-release.apk
-      
