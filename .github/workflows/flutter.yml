@@ -36,7 +36,7 @@ jobs:
 
       # 5️⃣ إضافة Shorebird للـ PATH
       - name: Add Shorebird to PATH
-        run: echo "$HOME/.shorebird/bin" >> $GITHUB_PATH
+        run: echo "$HOME/.config/shorebird/bin" >> $GITHUB_PATH
 
       # 6️⃣ تسجيل الدخول
       - name: Shorebird Login
