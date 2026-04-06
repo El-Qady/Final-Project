@@ -39,8 +39,8 @@ jobs:
         run: echo "$HOME/.config/shorebird/bin" >> $GITHUB_PATH
 
       # 6️⃣ تسجيل الدخول
-      - name: Shorebird Login
-        run: shorebird login --api-key ${{ secrets.SHOREBIRD_TOKEN }}
+      - name: Set Shorebird Token
+        run: echo "SHOREBIRD_TOKEN=${{ secrets.SHOREBIRD_TOKEN }}" >> $GITHUB_ENV
 
       # 7️⃣ dependencies
       - name: Install Dependencies
