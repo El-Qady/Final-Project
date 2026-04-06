@@ -113,7 +113,7 @@ class CustomDiagnosisResult extends StatelessWidget {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  'No significant abnormalities detected in the brain tissue structure and morphology.',
+                  result.returnDescription(result.diagnosis),
                   style: AppTextStyles.inter400style16.copyWith(
                     fontSize: 14,
                     color: isDark
