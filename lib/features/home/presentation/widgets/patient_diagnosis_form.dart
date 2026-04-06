@@ -18,8 +18,6 @@ class _PatientDiagnosisFormState extends State<PatientDiagnosisForm> {
   bool _isMale = true; // true for Male, false for Female
   File? _selectedImage;
 
-
-
   void _pickImage(bool fromCamera) async {
     String? imagePath = fromCamera
         ? await pickImageFromCamera()
@@ -50,6 +48,12 @@ class _PatientDiagnosisFormState extends State<PatientDiagnosisForm> {
         int.parse(diagnosisCubit.ageController.text),
         _isMale ? "Male" : "Female",
       );
+      diagnosisCubit.nameController.clear();
+      diagnosisCubit.ageController.clear();
+      setState(() {
+        _isMale = true;
+        _selectedImage = null;
+      });
     }
   }
 

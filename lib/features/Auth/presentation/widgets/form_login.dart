@@ -25,31 +25,34 @@ class FormLogin extends StatelessWidget {
               child: CircularProgressIndicator(color: AppColors.primaryColor),
             ),
           );
+          FocusScope.of(context).unfocus();
         }
         if (state is LoginSuccess) {
           Navigator.of(context, rootNavigator: true).pop();
-          // Navigate to the main app screen 
+          // Navigate to the main app screen
           Navigator.pushReplacementNamed(context, '/home');
-        } 
+        }
         if (state is LoginFailure) {
           Navigator.of(context, rootNavigator: true).pop();
+          FocusScope.of(context).unfocus();
           showToast(
-                context,
-                message: state.errorMessage,
-                backgroundColor: Colors.red.shade500,
-                shadowColor: Colors.red.shade200,
-                icon: Icons.error,
-              );
-        } 
+            context,
+            message: state.errorMessage,
+            backgroundColor: Colors.red.shade500,
+            shadowColor: Colors.red.shade200,
+            icon: Icons.error,
+          );
+        }
         if (state is LoginEmailNotVerified) {
           Navigator.of(context, rootNavigator: true).pop();
+          FocusScope.of(context).unfocus();
           showToast(
-                context,
-                message: "Email not verified. Please verify your email.",
-                backgroundColor: Colors.orange.shade500,
-                shadowColor: Colors.orange.shade200,
-                icon: Icons.warning_rounded,
-              );
+            context,
+            message: "Email not verified. Please verify your email.",
+            backgroundColor: Colors.orange.shade500,
+            shadowColor: Colors.orange.shade200,
+            icon: Icons.warning_rounded,
+          );
         }
       },
       builder: (context, state) {
