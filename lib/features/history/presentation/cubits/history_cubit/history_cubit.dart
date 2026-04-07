@@ -12,6 +12,9 @@ class HistoryCubit extends Cubit<HistoryState> {
   HistoryCubit() : super(HistoryInitial());
   final supabase = Supabase.instance.client;
   ApiServices apiServices = ApiServices();
+  List<Map<String, dynamic>> _allHistory = [];
+  String _searchQuery = '';
+  DateTime? _selectedDate;
 
   void addToHistory(DiagnosisModel diagnosisModel) async {
     final uid = FirebaseAuth.instance.currentUser!.uid;
@@ -46,12 +49,52 @@ class HistoryCubit extends Cubit<HistoryState> {
           .orderBy('date', descending: true)
           .get();
 
-      final history = snapshot.docs.map((doc) => doc.data()).toList();
+      _allHistory = snapshot.docs.map((doc) => doc.data()).toList();
 
-      emit(HistorySuccess(history));
+      _applyFilters();
     } catch (e) {
       emit(HistoryFailure(message: e.toString()));
     }
+  }
+
+  //! ================= FILTER =================
+  void updateSearch(String query) {
+    _searchQuery = query;
+    _applyFilters();
+  }
+
+  void updateDate(DateTime? date) {
+    _selectedDate = date;
+    _applyFilters();
+  }
+
+  void _applyFilters() {
+    final filtered = _allHistory.where((item) {
+      bool matchesSearch = true;
+      bool matchesDate = true;
+
+      if (_searchQuery.isNotEmpty) {
+        final name = item['name']?.toString().toLowerCase() ?? '';
+        matchesSearch = name.contains(_searchQuery.toLowerCase());
+      }
+
+      if (_selectedDate != null) {
+        final timestamp = item['date'] as Timestamp?;
+        if (timestamp != null) {
+          final date = timestamp.toDate();
+          matchesDate =
+              date.year == _selectedDate!.year &&
+              date.month == _selectedDate!.month &&
+              date.day == _selectedDate!.day;
+        } else {
+          matchesDate = false;
+        }
+      }
+
+      return matchesSearch && matchesDate;
+    }).toList();
+
+    emit(HistorySuccess(filtered));
   }
 
   Future<void> removeFromHistory(Timestamp date) async {
@@ -78,6 +121,11 @@ class HistoryCubit extends Cubit<HistoryState> {
         .collection('history')
         .doc(doc.id)
         .delete();
+    //! 🔥 أهم سطر
+    _allHistory.removeWhere((item) => item['date'] == date);
+
+    //! 🔥 أعد الفلترة
+    _applyFilters();
   }
 
   //! Supabase
@@ -104,5 +152,4 @@ class HistoryCubit extends Cubit<HistoryState> {
 
     return imageUrl;
   }
-
 }

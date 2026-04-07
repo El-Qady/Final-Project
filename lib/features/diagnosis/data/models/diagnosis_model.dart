@@ -64,7 +64,7 @@ class DiagnosisModel {
       return 'The diagnosis suggests the presence of a glioma tumor, which is a type of brain tumor. It is essential to seek medical advice for further evaluation, diagnosis confirmation, and treatment planning.';
     } else if (diagnosis == 'Meningioma_Tumor') {
       return 'The diagnosis indicates the presence of a meningioma tumor, which is a type of brain tumor that arises from the meninges. It is important to consult with a healthcare professional for further evaluation, diagnosis confirmation, and appropriate management.';
-    } else if (diagnosis == 'pituitary_Tumor') {
+    } else if (diagnosis == 'Pituitary_Tumor') {
       return 'The diagnosis suggests the presence of a pituitary tumor, which is a growth that develops in the pituitary gland. It is crucial to seek medical advice for further evaluation, diagnosis confirmation, and treatment planning.';
     } else {
       return 'No description available for this diagnosis.';

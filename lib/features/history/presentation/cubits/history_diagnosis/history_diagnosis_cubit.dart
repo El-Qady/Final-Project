@@ -7,13 +7,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HistoryDiagnosisCubit extends Cubit<HistoryDiagnosisState> {
   HistoryDiagnosisCubit() : super(HistoryDiagnosisInitial());
-  ApiServices apiServices =ApiServices();
-    Future<void> getPrediction(
+  ApiServices apiServices = ApiServices();
+  Future<void> getPrediction(
     File imageFile,
     String name,
     int age,
-    String gender) async {
-      emit(DiangonosisHistoryLoading());
+    String gender,
+  ) async {
+    emit(DiangonosisHistoryLoading());
 
     await _runPrediction(imageFile, name, age, gender);
   }
@@ -32,15 +33,14 @@ class HistoryDiagnosisCubit extends Cubit<HistoryDiagnosisState> {
         age: age,
         gender: gender,
       );
-      
-        if (response.data == null) {
-          emit(DiagonosisHistoryFailure('Error connecting to server'));
-          return;
-        }
-        emit(DiangonosisHistorySuccess());
-      
+
+      if (response.data == null) {
+        emit(DiagonosisHistoryFailure('Error connecting to server'));
+        return;
+      }
+      emit(DiangonosisHistorySuccess());
     } on DioException catch (e) {
-        emit(DiagonosisHistoryFailure(_handleDioError(e)));
+      emit(DiagonosisHistoryFailure(_handleDioError(e)));
     }
   }
 
