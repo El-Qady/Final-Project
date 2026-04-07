@@ -1,5 +1,6 @@
 import 'package:final_project/core/themes/provider/mode_provider.dart';
 import 'package:final_project/core/themes/themes.dart';
+import 'package:final_project/core/utils/app_constant.dart';
 import 'package:final_project/features/About/presentation/views/about_view.dart';
 import 'package:final_project/features/Auth/presentation/views/signin_view.dart';
 import 'package:final_project/features/Auth/presentation/views/signup_view.dart';
@@ -19,6 +20,7 @@ import 'package:final_project/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -35,6 +37,9 @@ void main() async {
       child: const Mokhi(),
     ),
   );
+  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+  OneSignal.initialize(oneSignalAppId);
+  OneSignal.Notifications.requestPermission(false);
 }
 
 class Mokhi extends StatelessWidget {
