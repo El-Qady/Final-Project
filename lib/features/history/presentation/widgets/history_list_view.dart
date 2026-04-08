@@ -51,10 +51,15 @@ class HistoryListView extends StatelessWidget {
           onDismissed: (_) {
             context.read<HistoryCubit>().removeFromHistory(item['date']);
           },
+          direction: DismissDirection.startToEnd,
           background: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: theme.colorScheme.error,
+            ),
             padding: const EdgeInsets.only(left: 16),
             alignment: Alignment.centerLeft,
-            color: theme.colorScheme.error,
+
             child: Icon(
               Icons.delete_outline,
               color: theme.colorScheme.onError,
