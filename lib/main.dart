@@ -22,21 +22,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await Supabase.initialize(
-    url: 'https://bmjcadvjmwvjxuoethjg.supabase.co',
-    anonKey: 'sb_publishable_lxrcM3_0cr4n8LfNHWZNNg_SS5BRCc-',
-  );
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => ModeProvider()..getMode(),
-      child: const Mokhi(),
+  await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey);
+  await SentryFlutter.init(
+    (options) {
+      options.dsn = sentryDsn;
+      options.sendDefaultPii = true;
+    },
+    appRunner: () => runApp(
+      SentryWidget(
+        child: ChangeNotifierProvider(
+          create: (context) => ModeProvider()..getMode(),
+          child: const Mokhi(),
+        ),
+      ),
     ),
   );
+
   OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
   OneSignal.initialize(oneSignalAppId);
   OneSignal.Notifications.requestPermission(false);
