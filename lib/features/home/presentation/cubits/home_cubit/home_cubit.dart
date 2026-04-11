@@ -5,18 +5,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitial());
-  Future<String>? _userNameFuture;
-  Future<String> getUserName() {
-    _userNameFuture ??= _fetchUserName();
-    return _userNameFuture!;
+  Future<Map<String, dynamic>?>? _userDataFuture;
+  
+  Future<Map<String, dynamic>?> getUserData() {
+    _userDataFuture ??= _fetchUserData();
+    return _userDataFuture!;
   }
 
-  Future<String> _fetchUserName() async {
+  Future<Map<String, dynamic>?> _fetchUserData() async {
     final uid = FirebaseAuth.instance.currentUser!.uid;
     final doc = await FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
         .get();
-    return doc['name'];
+    return doc.data();
+  }
+
+  void refreshUserData() {
+    _userDataFuture = _fetchUserData();
+    emit(HomeInitial());
   }
 }

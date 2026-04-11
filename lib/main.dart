@@ -9,6 +9,8 @@ import 'package:final_project/features/contact/presentation/cubits/contact_cubit
 import 'package:final_project/features/contact/presentation/views/contact_view.dart';
 import 'package:final_project/features/diagnosis/presentation/cubits/diagnosis_cubit/diagnosis_cubit.dart';
 import 'package:final_project/features/diagnosis/presentation/views/diagnosis_view.dart';
+import 'package:final_project/features/account_settings/presentation/cubits/account_settings_cubit.dart';
+import 'package:final_project/features/account_settings/presentation/views/account_settings_view.dart';
 import 'package:final_project/features/history/presentation/cubits/history_diagnosis/history_diagnosis_cubit.dart';
 import 'package:final_project/features/history/presentation/views/history_view.dart';
 import 'package:final_project/features/history/presentation/cubits/history_cubit/history_cubit.dart';
@@ -61,6 +63,7 @@ class Mokhi extends StatelessWidget {
         BlocProvider(create: (context) => ContactCubit()),
         BlocProvider(create: (context) => DiagnosisCubit(ApiServices())),
         BlocProvider(create: (context) => HistoryDiagnosisCubit()),
+        BlocProvider(create: (context) => AccountSettingsCubit()),
       ],
       child: MaterialApp(
         title: 'Mokhi',
@@ -82,6 +85,7 @@ class Mokhi extends StatelessWidget {
           '/historyView': (context) => const HistoryView(),
           '/aboutView': (context) => const AboutView(),
           '/contactView': (context) => const ContactView(),
+          '/accountSettingsView': (context) => const AccountSettingsView(),
         },
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:final_project/features/home/presentation/cubits/home_cubit/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class CustomTopDrawer extends StatelessWidget {
   const CustomTopDrawer({super.key});
@@ -10,8 +11,8 @@ class CustomTopDrawer extends StatelessWidget {
     double h = MediaQuery.of(context).size.height;
     final theme = Theme.of(context);
 
-    return FutureBuilder(
-      future: context.read<HomeCubit>().getUserName(),
+    return FutureBuilder<Map<String, dynamic>?>(
+      future: context.read<HomeCubit>().getUserData(),
       builder: (context, snapshot) {
         // ✅ Light gradient ثابت زي ما هو
         final Gradient lightGradient = const LinearGradient(
@@ -57,22 +58,35 @@ class CustomTopDrawer extends StatelessWidget {
           return Center(child: Text('Error: ${snapshot.error}'));
         }
 
+        final userData = snapshot.data;
+        final String name = userData?['name'] ?? 'User';
+        final String? imageUrl = userData?['profileImageUrl'];
+
         return Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 40),
           decoration: BoxDecoration(gradient: dynamicGradient),
           child: Column(
             children: [
-              CircleAvatar(
-                radius: 45,
-                backgroundImage: const AssetImage(
-                  'assets/images/doctor_avatar.png',
+              InkWell(
+                onTap: () async {
+                  await Navigator.pushNamed(context, '/accountSettingsView');
+                  if (context.mounted) {
+                    context.read<HomeCubit>().refreshUserData();
+                  }
+                },
+                child: CircleAvatar(
+                  radius: 45,
+                  backgroundImage: imageUrl != null && imageUrl.isNotEmpty
+                      ? CachedNetworkImageProvider(imageUrl)
+                      : const AssetImage('assets/images/doctor_avatar.png')
+                            as ImageProvider,
+                  backgroundColor: theme.colorScheme.surface,
                 ),
-                backgroundColor: theme.colorScheme.surface,
               ),
               const SizedBox(height: 12),
               Text(
-                snapshot.data!,
+                name,
                 style: TextStyle(
                   color: theme.brightness == Brightness.dark
                       ? Colors.white
