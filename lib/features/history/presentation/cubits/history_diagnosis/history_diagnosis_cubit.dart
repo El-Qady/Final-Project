@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:final_project/features/diagnosis/data/models/diagnosis_model.dart';
 import 'package:final_project/features/diagnosis/data/services/api_services.dart';
 import 'package:final_project/features/history/presentation/cubits/history_diagnosis/history_diagnosis_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,7 +39,14 @@ class HistoryDiagnosisCubit extends Cubit<HistoryDiagnosisState> {
         emit(DiagonosisHistoryFailure('Error connecting to server'));
         return;
       }
-      emit(DiangonosisHistorySuccess());
+      final diagnosisModel = DiagnosisModel.fromJson(
+        response.data,
+        imageFile,
+        name,
+        age,
+        gender,
+      );
+      emit(DiangonosisHistorySuccess(diagnosisModel: diagnosisModel));
     } on DioException catch (e) {
       emit(DiagonosisHistoryFailure(_handleDioError(e)));
     }

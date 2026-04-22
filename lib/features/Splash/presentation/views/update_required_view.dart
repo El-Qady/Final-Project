@@ -1,6 +1,5 @@
 import 'package:final_project/core/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 
 class UpdateRequiredView extends StatelessWidget {
   const UpdateRequiredView({super.key});

@@ -54,7 +54,7 @@ jobs:
       # 🔵 Patch (أي push عادي)
       - name: Shorebird Patch
         if: github.ref == 'refs/heads/main'
-        run: shorebird patch android
+        run: shorebird patch android --release-version=latest
 
       # 📤 رفع على Firebase (بس في release)
       - name: Upload to Firebase App Distribution

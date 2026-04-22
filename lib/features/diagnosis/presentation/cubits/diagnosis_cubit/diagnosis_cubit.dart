@@ -58,12 +58,12 @@ class DiagnosisCubit extends Cubit<DiagnosisState> {
     }
   }
 
-  Future<void> downloadPdf(String patient) async {
+  Future<void> downloadPdf(String patient, String resultId) async {
     emit(DiagnosisDownloadLoading());
 
     try {
       final file = await apiServices.downloadFile(
-        '/download-report',
+        '/download-report?result_id=$resultId',
         patient,
         onReceiveProgress: (received, total) {
           if (total != -1) {

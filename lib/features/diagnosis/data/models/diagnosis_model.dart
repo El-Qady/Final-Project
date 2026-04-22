@@ -5,6 +5,7 @@ class DiagnosisModel {
     required this.imagename,
     this.image,
     required this.diagnosis,
+    required this.resultId,
     required this.confidence,
     this.imageurl,
     required this.age,
@@ -12,6 +13,7 @@ class DiagnosisModel {
     required this.name,
   });
   final String diagnosis;
+  final String resultId;
   final double confidence;
   final File? image;
   final String? imageurl;
@@ -29,6 +31,7 @@ class DiagnosisModel {
     return DiagnosisModel(
       imagename: image.path.split('/').last,
       image: image,
+      resultId: json['result_id'].toString(),
       diagnosis: json['diagnosis'],
       confidence: (json['confidence']),
       age: age,
@@ -40,6 +43,7 @@ class DiagnosisModel {
     return DiagnosisModel(
       imagename: Uri.parse(map['image']).path.split('/history_images/').last,
       imageurl: map['image'],
+      resultId: map['result_id'].toString(),
       diagnosis: map['diagnosis'],
       confidence: map['confidence'],
       age: map['age'],

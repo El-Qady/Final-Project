@@ -67,7 +67,10 @@ class DiagnosisView extends StatelessWidget {
           SizedBox(height: 24),
           CustomButtons(
             onPress: () {
-              context.read<DiagnosisCubit>().downloadPdf(result.name);
+              context.read<DiagnosisCubit>().downloadPdf(
+                result.name,
+                result.resultId,
+              );
             },
           ),
         ],
