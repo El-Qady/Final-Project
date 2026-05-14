@@ -60,6 +60,23 @@ class _CustomDrawerState extends State<CustomDrawer> {
               Navigator.popAndPushNamed(context, '/doctorsView');
             },
           ),
+          // ================= Forensic Diagnosis ================
+          ListTile(
+            leading: Icon(
+              Icons.science_outlined,
+              color: theme.colorScheme.onSurface,
+            ),
+            title: Text(
+              'Forensic Diagnosis',
+              style: TextStyle(
+                fontSize: 16,
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
+            onTap: () {
+              Navigator.popAndPushNamed(context, '/forensicView');
+            },
+          ),
           // ================= View History ================
           ListTile(
             leading: Icon(

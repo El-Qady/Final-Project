@@ -18,6 +18,9 @@ import 'package:final_project/features/diagnosis/data/services/api_services.dart
 import 'package:final_project/features/home/presentation/cubits/home_cubit/home_cubit.dart';
 import 'package:final_project/features/home/presentation/views/doctors_view.dart';
 import 'package:final_project/features/home/presentation/views/home_view.dart';
+import 'package:final_project/features/forensic/data/services/forensic_api_services.dart';
+import 'package:final_project/features/forensic/presentation/cubits/forensic_cubit/forensic_cubit.dart';
+import 'package:final_project/features/forensic/presentation/views/forensic_view.dart';
 import 'package:final_project/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +67,7 @@ class Mokhi extends StatelessWidget {
         BlocProvider(create: (context) => DiagnosisCubit(ApiServices())),
         BlocProvider(create: (context) => HistoryDiagnosisCubit()),
         BlocProvider(create: (context) => AccountSettingsCubit()),
+        BlocProvider(create: (context) => ForensicCubit(ForensicApiServices())),
       ],
       child: MaterialApp(
         title: 'Mokhi',
@@ -86,6 +90,7 @@ class Mokhi extends StatelessWidget {
           '/aboutView': (context) => const AboutView(),
           '/contactView': (context) => const ContactView(),
           '/accountSettingsView': (context) => const AccountSettingsView(),
+          '/forensicView': (context) => const ForensicView(),
         },
       ),
     );
