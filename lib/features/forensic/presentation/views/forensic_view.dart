@@ -19,6 +19,12 @@ class ForensicView extends StatefulWidget {
 class _ForensicViewState extends State<ForensicView> {
   File? _selectedImage;
 
+  @override
+  void initState() {
+    super.initState();
+    context.read<ForensicCubit>().reset();
+  }
+
   void _pickImage(bool fromCamera) async {
     String? imagePath = fromCamera
         ? await pickImageFromCamera()
@@ -46,6 +52,105 @@ class _ForensicViewState extends State<ForensicView> {
       return;
     }
     cubit.getForensicPrediction(_selectedImage!);
+  }
+
+  Widget _buildReportSection(String report, ThemeData theme, bool isDark) {
+    if (report.trim().isEmpty) return const SizedBox.shrink();
+
+    List<String> blocks = report.trim().split('\n\n');
+    
+    return Container(
+      margin: const EdgeInsets.only(top: 24),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: isDark ? theme.colorScheme.surface : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: isDark ? Colors.black26 : Colors.black12,
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+        border: Border.all(
+          color: theme.colorScheme.primary.withOpacity(0.1),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.description_outlined, color: theme.colorScheme.primary),
+              const SizedBox(width: 8),
+              Text(
+                'Detailed Report',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
+              ),
+            ],
+          ),
+          const Divider(height: 24),
+          ...blocks.map((block) {
+            String trimmedBlock = block.trim();
+            if (trimmedBlock.isEmpty) return const SizedBox.shrink();
+
+            bool isHeading = !trimmedBlock.contains('\n') && trimmedBlock.length < 60;
+            
+            if (isHeading) {
+              return Padding(
+                padding: const EdgeInsets.only(top: 12.0, bottom: 8.0),
+                child: Text(
+                  trimmedBlock,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+              );
+            } else {
+              List<String> sentences = trimmedBlock.split('\n');
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: sentences.map((sentence) {
+                  if (sentence.trim().isEmpty) return const SizedBox.shrink();
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 6.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '• ',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.primary.withOpacity(0.7),
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            sentence.trim(),
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: isDark ? Colors.white70 : Colors.black87,
+                              height: 1.5,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              );
+            }
+          }).toList(),
+        ],
+      ),
+    );
   }
 
   @override
@@ -96,7 +201,9 @@ class _ForensicViewState extends State<ForensicView> {
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? theme.colorScheme.onSurface : theme.colorScheme.primary,
+                    color: isDark
+                        ? theme.colorScheme.onSurface
+                        : theme.colorScheme.primary,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -110,7 +217,7 @@ class _ForensicViewState extends State<ForensicView> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 40),
-                
+
                 // Image Selection Area
                 Container(
                   decoration: BoxDecoration(
@@ -140,14 +247,15 @@ class _ForensicViewState extends State<ForensicView> {
                         )
                       else
                         SubmitButton(
-                          onPressed: () => _submitData(context.read<ForensicCubit>()),
+                          onPressed: () =>
+                              _submitData(context.read<ForensicCubit>()),
                         ),
                     ],
                   ),
                 ),
-                
+
                 const SizedBox(height: 40),
-                
+
                 // Result Area
                 if (state is ForensicSuccess)
                   AnimatedContainer(
@@ -197,7 +305,10 @@ class _ForensicViewState extends State<ForensicView> {
                         ),
                         const SizedBox(height: 16),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
                           decoration: BoxDecoration(
                             color: theme.colorScheme.primary,
                             borderRadius: BorderRadius.circular(20),
@@ -211,6 +322,8 @@ class _ForensicViewState extends State<ForensicView> {
                             ),
                           ),
                         ),
+                        if (state.forensicModel.report != null && state.forensicModel.report!.isNotEmpty)
+                          _buildReportSection(state.forensicModel.report!, theme, isDark),
                       ],
                     ),
                   ),
