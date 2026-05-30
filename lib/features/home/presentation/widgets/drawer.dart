@@ -60,6 +60,23 @@ class _CustomDrawerState extends State<CustomDrawer> {
               Navigator.popAndPushNamed(context, '/doctorsView');
             },
           ),
+          // ================= CT Diagnosis ================
+          ListTile(
+            leading: Icon(
+              Icons.biotech_outlined,
+              color: theme.colorScheme.onSurface,
+            ),
+            title: Text(
+              'Diagnosis CT',
+              style: TextStyle(
+                fontSize: 16,
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
+            onTap: () {
+              Navigator.popAndPushNamed(context, '/ctDiagnosisView');
+            },
+          ),
           // ================= View History ================
           ListTile(
             leading: Icon(

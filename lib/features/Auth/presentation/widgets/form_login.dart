@@ -34,7 +34,6 @@ class FormLogin extends StatelessWidget {
         }
         if (state is LoginFailure) {
           Navigator.of(context, rootNavigator: true).pop();
-          FocusScope.of(context).unfocus();
           showToast(
             context,
             message: state.errorMessage,
@@ -45,7 +44,6 @@ class FormLogin extends StatelessWidget {
         }
         if (state is LoginEmailNotVerified) {
           Navigator.of(context, rootNavigator: true).pop();
-          FocusScope.of(context).unfocus();
           showToast(
             context,
             message: "Email not verified. Please verify your email.",
@@ -102,7 +100,6 @@ class FormLogin extends StatelessWidget {
                 CustomButton(
                   label: AppStrings.loginButton,
                   onPressed: () {
-                    FocusScope.of(context).unfocus();
                     if (cubit.formKeyLogin.currentState!.validate()) {
                       cubit.login();
                     } else {

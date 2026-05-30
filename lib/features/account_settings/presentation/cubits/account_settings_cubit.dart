@@ -12,7 +12,6 @@ class AccountSettingsCubit extends Cubit<AccountSettingsState> {
   String? profileImageUrl;
   String? initialProfileImageUrl;
   String? currentName;
-  String? currentPassword;
   String? currentEmail;
 
   final String _imgbbApiKey = '58ad2c3f61c6825170be7ff6fe3c6c12';
@@ -35,7 +34,6 @@ class AccountSettingsCubit extends Cubit<AccountSettingsState> {
         final data = doc.data()!;
         currentName = data['name'];
         currentEmail = data['email'];
-        currentPassword = data['password'];
         profileImageUrl = data['profileImageUrl'];
         initialProfileImageUrl = profileImageUrl;
         emit(AccountSettingsSuccess('Data loaded'));
@@ -47,7 +45,7 @@ class AccountSettingsCubit extends Cubit<AccountSettingsState> {
     }
   }
 
-  Future<void> updateUserData({String? name, String? password}) async {
+  Future<void> updateUserData({String? name}) async {
     try {
       emit(AccountSettingsLoading());
       final uid = FirebaseAuth.instance.currentUser?.uid;
@@ -60,22 +58,6 @@ class AccountSettingsCubit extends Cubit<AccountSettingsState> {
       if (name != null && name.isNotEmpty) {
         updates['name'] = name;
         currentName = name;
-      }
-      if (password != null &&
-          password.isNotEmpty &&
-          password != currentPassword) {
-        try {
-          await FirebaseAuth.instance.currentUser?.updatePassword(password);
-        } on FirebaseAuthException catch (e) {
-          emit(
-            AccountSettingsFailure(
-              'Auth Error: ${e.message} (You may need to re-login)',
-            ),
-          );
-          return;
-        }
-        updates['password'] = password;
-        currentPassword = password;
       }
 
       if (profileImageUrl != initialProfileImageUrl) {

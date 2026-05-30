@@ -14,8 +14,6 @@ class AccountSettingsView extends StatefulWidget {
 
 class _AccountSettingsViewState extends State<AccountSettingsView> {
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _isPasswordVisible = false;
 
   @override
   void initState() {
@@ -26,16 +24,12 @@ class _AccountSettingsViewState extends State<AccountSettingsView> {
   @override
   void dispose() {
     _nameController.dispose();
-    _passwordController.dispose();
     super.dispose();
   }
 
   void _populateControllers(AccountSettingsCubit cubit) {
     if (_nameController.text.isEmpty && cubit.currentName != null) {
       _nameController.text = cubit.currentName!;
-    }
-    if (_passwordController.text.isEmpty && cubit.currentPassword != null) {
-      _passwordController.text = cubit.currentPassword!;
     }
   }
 
@@ -210,42 +204,6 @@ class _AccountSettingsViewState extends State<AccountSettingsView> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 20),
-                        // Password Input
-                        _buildGlassContainer(
-                          context: context,
-                          child: TextField(
-                            controller: _passwordController,
-                            obscureText: !_isPasswordVisible,
-                            style: TextStyle(
-                              color: theme.colorScheme.onSurface,
-                            ),
-                            decoration: InputDecoration(
-                              labelText: 'Password',
-                              labelStyle: TextStyle(
-                                color: theme.colorScheme.primary,
-                              ),
-                              prefixIcon: Icon(
-                                Icons.lock_outline,
-                                color: theme.colorScheme.primary,
-                              ),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  _isPasswordVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                  color: theme.colorScheme.primary,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _isPasswordVisible = !_isPasswordVisible;
-                                  });
-                                },
-                              ),
-                              border: InputBorder.none,
-                            ),
-                          ),
-                        ),
                         const SizedBox(height: 50),
                         // Save Button
                         SizedBox(
@@ -258,7 +216,6 @@ class _AccountSettingsViewState extends State<AccountSettingsView> {
                                     FocusScope.of(context).unfocus();
                                     cubit.updateUserData(
                                       name: _nameController.text.trim(),
-                                      password: _passwordController.text.trim(),
                                     );
                                   },
                             style: ElevatedButton.styleFrom(
