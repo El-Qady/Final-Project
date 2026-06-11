@@ -534,6 +534,16 @@ South Valley National University
 Class of 2026
 
 ---
+## 📥 Application Download
+
+
+### APK Download
+
+
+
+[Download APK](https://www.mediafire.com/file/o9a6pzhko5lheb6/MOKHI.apk/file)
+
+---
 
 # License
 
